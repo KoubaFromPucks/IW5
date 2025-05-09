@@ -1,0 +1,23 @@
+﻿@using Quizzer.Common.Models;
+<div class="card" style="width: 42rem;">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-sm">
+				<b>@model.Text</b>
+			</div>
+			<div class="col-sm" style="text-align:right">
+				<a class="btn btn-primary"
+				   href="/QuestionDetail/@model.QuizId/@model.Id/@LoggedUserId">
+					Detail
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public QuestionDetailModel model { get; set; }
+	[Parameter]
+	public Guid LoggedUserId { get; set; }
+}

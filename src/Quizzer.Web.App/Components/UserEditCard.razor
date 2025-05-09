@@ -1,0 +1,41 @@
+﻿@using Quizzer.Common.Models;
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <img src="@EditedUser.ProfilePictureUrl" class="img-fluid" />
+
+            <EditForm Model="@EditedUser" OnValidSubmit="@OnSubmit"
+                OnInvalidSubmit="@OnInvalid">
+                <DataAnnotationsValidator />
+                <ValidationSummary/>
+                <p class="mb-3">Name</p>
+                <small class="form-text text-danger">
+                    <ValidationMessage For="@(() => EditedUser.Name)" />
+                </small>
+                <InputText @bind-Value="@EditedUser.Name" class="form-control" />
+                <p class="mb-3">Profile Picture</p>
+                <InputText @bind-Value="@EditedUser.ProfilePictureUrl" class="form-control" />
+                <br>
+                <button type="submit" class="btn btn-success mr-2">Save</button>
+                <button class="btn btn-secondary mr-2" @onclick="@OnDone">Done</button>
+            </EditForm>
+
+        </div>
+
+        <div class="col-8">
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public UserDetailModel EditedUser { get; set; }
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+    [Parameter]
+    public EventCallback OnDone { get; set; }
+    [Parameter]
+    public EventCallback OnInvalid { get; set; }
+}

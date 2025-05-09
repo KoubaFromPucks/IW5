@@ -1,0 +1,92 @@
+﻿@page "/quizEdit/{Id:guid}/{LoggedUserId:guid}"
+@inherits PageBase
+@inject IJSRuntime JsRuntime
+@inject NavigationManager NavManager
+@using Quizzer.Web.App.Components;
+
+<Toolbar LoggedUser="LoggedUser"></Toolbar>
+
+<HeaderWithTitle titleStr="@(Id != Guid.Empty ? "Edit quiz" : "Create quiz")"></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+            messageBoxText="@_messageBoxText"
+            messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+@if(Quiz is not null){
+    <EditForm Model="@Quiz" OnValidSubmit="@Save" OnInvalidSubmit="HideMessageBox">
+        <DataAnnotationsValidator />
+        <ValidationSummary/>
+        <label for="quizName"><b>name:</b></label><br/>
+        <small class="form-text text-danger">
+            <ValidationMessage For="@(() => Quiz.Name)" />
+        </small>
+        <InputText id="quizName" disabled=@(!Quiz.IsEditable) @bind-Value="@Quiz.Name"></InputText>
+        <br/><br/>
+
+        <label for="quizDesc"><b>Description:</b></label><br/>
+        <InputTextArea disabled=@(!Quiz.IsEditable) id="quizDesc" @bind-Value="@Quiz.Description"></InputTextArea>
+        <br/><br/>
+        <label for="quizStart"><b>start:</b></label><br/>
+        <small class="form-text text-danger">
+            <ValidationMessage For="@(() => Quiz.StartTime)" />
+        </small>
+        <InputDate Type="InputDateType.DateTimeLocal"  disabled=@(!Quiz.IsEditable) id="quizStart" @bind-Value="Quiz.StartTime"></InputDate>
+        <br/>
+        <label for="quizEnd"><b>end:</b></label><br />
+        <small class="form-text text-danger">
+            <ValidationMessage For="@(() => Quiz.EndTime)" />
+        </small>
+        <InputDate Type="InputDateType.DateTimeLocal" disabled=@(!Quiz.IsEditable) id="quizEnd" @bind-Value="Quiz.EndTime"></InputDate>
+        <br /><br />
+        <button type="submit"
+            class="btn btn-success @GetDisableClass()">Save</button>
+        <button class="btn btn-secondary mr-2" @onclick="@Done">Done</button>
+    </EditForm>
+
+    if (Quiz.Id == Guid.Empty)
+    {
+        <hr/>
+        <h4>Save quiz to start adding questions.</h4>
+        <hr/>        
+    }
+    else
+    {
+        <hr/>
+        <h4>Questions:</h4>
+        <hr/>
+
+        <a class="btn btn-warning @GetDisableClass()" href="/QuestionDetail/@Id/@Guid.Empty/@LoggedUserId">
+            Add question
+        </a>
+        <hr />
+
+        @if (Quiz.Questions is not null)
+        {
+            @foreach (var question in Quiz.Questions)
+            {
+                <div class="card w-25">
+                    <div class="card-body">
+                        <div class="card-title">
+                            @question.Text
+                        </div>
+
+                        <a href="/QuestionDetail/@Id/@question.Id/@LoggedUserId"
+                        class="btn btn-primary">
+                            @(Quiz.IsEditable ? "EDIT" : "View detail")
+                        </a>
+
+                        <button @onclick="(e) => RemoveQuestion(question.Id)"
+                        class="btn btn-danger" disabled=@(!Quiz.IsEditable)>
+                            REMOVE
+                        </button>
+                    </div>
+                </div>
+                <br/>
+            }
+        }
+    }
+}
+else
+{
+    <p>loading...</p>
+}

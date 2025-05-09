@@ -1,0 +1,50 @@
+﻿@using Quizzer.API.DAL.Enums;
+@using Quizzer.Common.Models;
+@using Microsoft.AspNetCore.Components;
+
+<div class="card mb-5 quizFillCard @(ShowCard? "":"d-none")" id="@QuestionDetailModel.Id.ToString()">
+	<div class="card-header text-center">
+		@QuestionDetailModel.Text
+	</div>
+
+	<div class="card-body pb-0">
+		@for (int i = 0; i < QuestionDetailModel.Answers.Count; i++)
+		{
+			AnswerDetailModel answer = QuestionDetailModel.Answers[AnswerOrder[i]];
+			<div class="card mb-3 w-100">
+				<div class="row no-gutters">
+					<div class="col-md-8">
+						<EditForm Model="@answer" class="h-100">
+							<InputRadioGroup @bind-Value="@SelectedSingle" Name="@QuestionDetailModel.Id.ToString()">
+								<div class="card-body h-100 align-items-xl-center d-flex">
+									<label class="w-100">
+										@if (QuestionDetailModel.QuestionType == AnswerFormat.OrderChoice)
+										{
+											<InputNumber @bind-Value="@answer.Order" Min="0" />
+										}
+										else if (QuestionDetailModel.QuestionType == AnswerFormat.MultiChoice)
+										{
+											<InputCheckbox @bind-Value="@answer.IsUserSelected" class="biggerInput" />
+										}
+										else
+										{
+											<InputRadio Name="@QuestionDetailModel.Id.ToString()" Value="answer.Id" class="biggerInput" />
+										}
+										<span class="biggerInputLabel ms-2">
+											@answer.Text
+										</span>
+										<small class="fw-bold text-danger" id="@answer.Id.ToString()">
+										</small>
+									</label>
+								</div>
+							</InputRadioGroup>
+						</EditForm>
+					</div>
+					<div class="col-md-4 justify-content-center d-flex">
+						<img src="@answer.PictureUrl" class="answerCardImg pe-3 pb-3 pt-3">
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>

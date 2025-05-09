@@ -1,0 +1,42 @@
+﻿@page "/PlayQuiz/{QuizId:guid}/{LoggedUserId:guid}"
+@inherits PageBase
+
+@using Quizzer.Common.Models;
+@using Quizzer.Web.App.Components;
+
+@inject IJSRuntime JsRuntime
+
+<Toolbar LoggedUser="LoggedUser"></Toolbar>
+
+<PageTitle>@QuizDetailModel?.Name results</PageTitle>
+
+<HeaderWithTitle titleStr="@($"{QuizDetailModel?.Name}")"></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+			messageBoxText="@_messageBoxText"
+			messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+@if (QuizDetailModel is not null && QuizDetailModel?.Questions is not null)
+{
+	bool showCard = true;
+	@foreach (QuestionDetailModel qm in QuizDetailModel.Questions)
+	{
+		<QuestionFillCard QuestionDetailModel="qm" ShowCard="showCard"></QuestionFillCard>
+		showCard = false;
+	}
+}
+else if(_loadingData)
+{
+	<h1 class="w-100 text-center">Loading data...</h1>
+}
+
+<div class="w-100 justify-content-evenly mb-1 z-0 fixed-bottom @(QuizCompleted || QuizDetailModel is null? "d-none" : "d-flex")">
+	<button type="button" class="btn btn-primary @(CanGoToPreviousQuestion? "":"disabled")" 
+	@onclick="PreviousQuestion">
+		Previous
+	</button>
+
+	<button type="button" class="btn @(CanGoToNextQuestion? "btn-primary": "btn-success")" @onclick="NextQuestion">
+		@(CanGoToNextQuestion ? "Next" : "Complete")
+	</button>
+</div>

@@ -1,0 +1,12 @@
+﻿<div class="alert @(messageBoxVisible? "d-block":"d-none") @messageboxClass" role="alert" id="msgBox">
+    @messageBoxText
+</div>
+
+@code {
+    [Parameter]
+    public string messageboxClass { get; set; }  = "";
+    [Parameter]
+    public string messageBoxText { get; set; } = "";
+    [Parameter]
+    public bool messageBoxVisible { get; set; } = false;
+}

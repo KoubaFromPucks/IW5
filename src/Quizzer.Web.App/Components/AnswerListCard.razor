@@ -1,0 +1,32 @@
+﻿@using Quizzer.Common.Models;
+<div class="card" style="width: 42rem;">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-sm">
+				<b>@model.Text</b><br />
+				@if (model.PictureUrl != null)
+				{
+					<img src="@model.PictureUrl" alt="picture not found :("
+					style="height: 69px;"/>
+				}
+				else
+				{
+					<p>no picture</p>
+				}
+			</div>
+			<div class="col-sm" style="text-align:right">
+				<a class="btn btn-primary"
+				   href="/answerDetail/@model.QuestionId/@model.Id/@LoggedUserId">
+					Detail
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public AnswerDetailModel model { get; set; }
+	[Parameter]
+	public Guid LoggedUserId { get; set; }
+}

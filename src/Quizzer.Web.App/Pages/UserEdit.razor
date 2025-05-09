@@ -1,0 +1,24 @@
+﻿@page "/UserEdit/{UserId:guid}/{LoggedUserId:guid}"
+
+@inherits PageBase
+@using Quizzer.Web.App.Components;
+@inject NavigationManager NavManager
+@inject IJSRuntime JsRuntime
+
+<Toolbar LoggedUser="LoggedUser"></Toolbar>
+
+<HeaderWithTitle titleStr=@(UserId != Guid.Empty ? "Edit user" : "Create user")></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+			messageBoxText="@_messageBoxText"
+			messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+@if (CurrentUser is not null)
+{
+    <UserEditCard EditedUser="CurrentUser" OnSubmit="Submit" OnDone="Done"
+        OnInvalid="HideMessageBox"></UserEditCard>
+}
+else
+{
+    <p>Loading...</p>
+}

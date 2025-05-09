@@ -1,0 +1,92 @@
+﻿@page "/QuizListPage/{LoggedUserId:guid}"
+@using Quizzer.Web.App.Components;
+@inherits PageBase
+@inject IJSRuntime JsRuntime
+@inject NavigationManager NavManager
+
+<Toolbar LoggedUser="LoggedUser"></Toolbar>
+
+<HeaderWithTitle titleStr="Quizzes"></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+            messageBoxText="@_messageBoxText"
+            messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+<a class="btn btn-warning"
+   href="@($"/quizEdit/{Guid.Empty}/{LoggedUserId}")">Create quiz</a>
+<hr/>
+
+<ModalWindow 
+    FirstButtonText="Close" 
+    SecondButtonText="See detail" 
+    TextBody="Do you really want to see the detail?
+    You will be able to see correct answers and you still did not played the quiz."
+    Title="Confirm Your choice"
+    OnConfirm="@(() => NavManager.NavigateTo(ModalUrl))"
+    @ref="DetailWarningWindow"></ModalWindow>
+
+@if (Quizes is not null)
+{
+
+    @foreach (var model in Quizes)
+    {
+
+        <div class="card w-75 mb-3">
+
+            <div class="card-body">
+                <h5 class="card-title">@model.Name</h5>
+                <p class="card-text">@model.Description</p>
+                <div class="d-flex">
+                    <p class="mr-2">Start time:</p>
+                    <p>@model.StartTime</p>
+
+
+                </div>
+
+                <div class="d-flex">
+                    <p class="mr-2">End time:</p>
+                    <p>@model.EndTime</p>
+
+
+                </div>
+
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a href="@($"/PlayQuiz/{model.Id}/{LoggedUserId}")" 
+                                class="btn btn-primary @(model.IsPlayable.GetValueOrDefault(true)? "":"disabled")">
+                                Play
+                            </a>
+                        </div>
+
+                        <div class="col-sm">
+                            <a class="btn btn-primary" @onclick='(() => ShowModalOrNavigate(model, $"/quizEdit/{model.Id}/{LoggedUserId}"))'>
+                                @(model.IsEditable ? "Edit":"View detail")
+                            </a>
+                        </div>
+
+                        <div class="col-sm">
+                            <a href="@($"/QuizResult/{model.Id}/{LoggedUserId}/{LoggedUserId}")" 
+                            class="btn btn-primary @(model.CanSeeResults.GetValueOrDefault(true)? "":"disabled")">
+                                View Result
+                            </a>
+                        </div>
+                        
+                        <div class="col-sm">
+                            <button @onclick="(e) => DeleteQuiz(model)"
+                            class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p>Loading...</p>
+}
+
+
+

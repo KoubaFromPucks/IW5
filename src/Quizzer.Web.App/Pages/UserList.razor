@@ -1,0 +1,46 @@
+﻿@page "/users/{LoggedUserId:guid}"
+@inherits PageBase
+@using Quizzer.Web.App.Components;
+
+@inject IJSRuntime JsRuntime
+
+<Toolbar LoggedUser="LoggedUser"></Toolbar>
+
+<HeaderWithTitle titleStr="Users"></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+			messageBoxText="@_messageBoxText"
+			messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+<a class="btn btn-warning"
+   href="@($"/UserEdit/{Guid.Empty}/{LoggedUserId}")">Create user</a>
+<hr />
+
+<div class="card-deck">
+	@if (_users is not null)
+	{
+		@foreach (var model in _users)
+		{
+			<div class="card" style="width: 18rem;">
+				<img class="card-img-top" src="@model.ProfilePictureUrl" alt="no picture :(">
+				<div class="card-header">
+					<p><b>@model.Name</b></p>
+				</div>
+				<div class="card-body">
+					<a href="/UserEdit/@model.Id/@LoggedUserId"
+					   class="btn btn-primary">detail</a>
+					<button @onclick="@(() => @DeleteUser(model.Id))"
+							class="btn btn-danger">
+						delete
+					</button>
+				</div>
+			</div>
+		}
+	}
+	else
+	{
+		<p>Loading...</p>
+	}
+
+</div>
+

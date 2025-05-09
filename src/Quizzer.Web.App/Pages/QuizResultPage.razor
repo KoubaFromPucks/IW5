@@ -1,0 +1,40 @@
+﻿@page "/QuizResult/{QuizId:guid}/{UserId:guid}/{LoggedUserId:guid}"
+@using Quizzer.Common.Models;
+@using Quizzer.Web.App.Components;
+
+@inherits PageBase
+
+<Toolbar LoggedUser="LoggedUser"></Toolbar>
+
+<HeaderWithTitle titleStr=@($"{QuizResultDetailModel?.Name} results")></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+            messageBoxText="@_messageBoxText"
+            messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+@if (QuizResultDetailModel is not null)
+{
+    <p>@QuizResultDetailModel.Description</p>
+
+    <table class="table table-hover">
+        <tbody>
+            <tr>
+                <th scope="row">Your score</th>
+                <td>@QuizResultDetailModel.UserScore</td>
+            </tr>
+            <tr>
+                <th scope="row">Best score</th>
+                <td>@QuizResultDetailModel.MaxScore</td>
+            </tr>
+        </tbody>
+    </table>
+
+    @foreach(QuestionResultModel questionResultModel in QuestionResultModels)
+    {
+        <QuestionResultCard QuestionResultModel="questionResultModel" />
+    }
+}
+else if (!_messageBoxVisible)
+{
+    <h1 class="text-center">Loading data...</h1>
+}

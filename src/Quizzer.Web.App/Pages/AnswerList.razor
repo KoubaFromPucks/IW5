@@ -1,0 +1,58 @@
+﻿@page "/answers/{LoggedUserId:guid}"
+@inherits PageBase
+@inject IJSRuntime JsRuntime
+@inject NavigationManager NavManager
+@using Quizzer.Web.App.Components;
+@using Quizzer.Web.App.Pages
+
+<Toolbar LoggedUser="LoggedUser"></Toolbar>
+
+<HeaderWithTitle titleStr="Answers"></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+			messageBoxText="@_messageBoxText"
+			messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+<div class="row">
+	@if (_questions is null)
+	{
+		<div class="col-sm">
+			<button class="btn btn-secondary" @onclick="@LoadQuestions">Creation form</button>
+		</div>
+	}
+	else
+	{
+		<div class="col-sm">
+			<label class="form-check-label" for="quizSelect">Choose question:</label>
+		</div>
+		<div class="col-sm">
+
+			<select class="form-select" id="quizSelect" @bind="@SelectedQuestionId">
+				@if (_questions is not null)
+				{
+					foreach (var question in _questions)
+					{
+						<option value="@question.Id">@question.Text</option>
+					}
+				}
+			</select>
+		</div>
+		<div class="col-sm">
+			<button class="btn btn-warning" @onclick="@CreateAnswer">Create answer</button>
+		</div>
+	}
+</div>
+
+<hr />
+
+@if (_answers is not null)
+{
+	@foreach (var model in _answers)
+	{
+		<AnswerListCard model="model" LoggedUserId="LoggedUserId"></AnswerListCard>
+	}
+}
+else
+{
+	<p>Loading...</p>
+}

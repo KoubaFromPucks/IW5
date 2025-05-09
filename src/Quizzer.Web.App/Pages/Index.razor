@@ -1,0 +1,24 @@
+﻿@page "/"
+@inject NavigationManager NavManager
+@inherits PageBase
+@using Quizzer.Web.App.Components
+
+<HeaderWithTitle titleStr="Select user"></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+            messageBoxText="@_messageBoxText"
+            messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+<div class="container d-flex flex-wrap">
+    @foreach (var userDetail in _userDetailModels)
+    {
+        <div class="hover-card card m-1 table-hover user-card" onclick="@(() => SelectUser(userDetail.Id))">
+            <div class="h-100 d-flex align-items-center">
+                <img src="@userDetail.ProfilePictureUrl" class="card-img-top" alt="@userDetail.Name" style="max-height: 25rem;">
+            </div>
+            <div class="card-body text-center">
+                <p class="card-text">@userDetail.Name</p>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,97 @@
+﻿@page "/QuestionDetail/{QuizId:guid}/{QuestionId:guid}/{LoggedUserId:guid}"
+@using Quizzer.Common.Models;
+@using Quizzer.Web.App.Components;
+@using Quizzer.API.DAL.Enums;
+@inject IJSRuntime JsRuntime
+@inject NavigationManager NavManager
+@inherits PageBase
+
+<Toolbar LoggedUser="LoggedUser"></Toolbar>
+
+<HeaderWithTitle titleStr="@(QuestionId != Guid.Empty ? "Edit question" : "Create question")"></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+			messageBoxText="@_messageBoxText"
+			messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+<QuestionEditForm Question="Question"
+				  OnSave="Update"
+				  OnInvalid="HideMessageBox"
+				  OnDone="Done"
+				  OnDeleteAnswer="LoadData"></QuestionEditForm>
+
+@if (Question.Id == Guid.Empty)
+{
+	<hr />
+	<h4>Save question to start adding answers.</h4>
+	<hr />
+}
+else
+{
+	<hr />
+	<h4>Answers:</h4>
+	<hr />
+
+	<a class="btn btn-warning @GetDisableClass()"
+	   href="/answerDetail/@Question.Id/@Guid.Empty/@LoggedUserId">
+		Add answer
+	</a>
+	<hr />
+
+	@if (Question.Answers is not null)
+	{
+		@foreach (AnswerDetailModel answer in Question.Answers)
+		{
+			<div class="card w-25">
+				<div class="card-body">
+					<div class="card-title">
+
+						<div class="row">
+							<div class="col-sm">
+								<b style="margin-right: 10px;">@answer.Text</b>
+								@if (answer.PictureUrl != null)
+								{
+									<img src="@answer.PictureUrl" alt="picture not found :("
+										 style="height: 69px;" />
+								}
+								else
+								{
+									<p>no picture</p>
+								}
+							</div>
+							<div class="col-sm">
+								@if (Question.QuestionType == AnswerFormat.OrderChoice)
+								{
+									<p class="form-check-label">order: <b>@answer.Order</b></p>
+								}
+								else
+								{
+									<label class="form-check-label" for="isCorrect">correct:&ensp;</label>
+									@if (answer.IsCorrect)
+									{
+										<input checked class="form-check-input" type="radio" value="" id="isCorrect" disabled>
+									}
+									else
+									{
+										<input class="form-check-input" type="radio" value="" id="isCorrect" disabled>
+									}
+								}
+							</div>
+						</div>
+
+					</div>
+					<a href="/answerDetail/@Question.Id/@answer.Id/@LoggedUserId"
+					   class="btn btn-primary">
+						@(Question.IsQuizEditable ? "Edit" : "View Detail")
+					</a>
+
+					<button @onclick="(e) => DeleteAnswer(answer.Id)" class="btn btn-danger"
+							disabled=@(!Question.IsQuizEditable)>
+						delete
+					</button>
+				</div>
+			</div>
+			<br />
+		}
+	}
+}

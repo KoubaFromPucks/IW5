@@ -1,0 +1,134 @@
+﻿@page "/search/{LoggedUserId:guid}"
+@inherits PageBase
+@using Quizzer.Web.App.Components;
+@using Quizzer.Web.App.Pages
+
+<style>
+	.card {
+		width: 42rem;
+	}
+</style>
+
+<Toolbar LoggedUser="LoggedUser"></Toolbar>
+
+<HeaderWithTitle titleStr="Search"></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+			messageBoxText="@_messageBoxText"
+			messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+<div>
+	<input @bind="@SearchStr" minlength="1" maxlength="32" size="10" />
+	<button type="submit" @onclick="@DoSearch"
+			class="btn btn-primary">
+		Search
+	</button>
+</div>
+
+<input @bind="@Exact" type="checkbox" id="exactCheckbox" name="exactCheckbox">
+<label for="exactCheckbox">exact match</label>
+ |
+<input @bind="@ShowUser" type="checkbox" id="userCheckbox" name="userCheckbox">
+<label for="userCheckbox">users</label>
+<input @bind="@ShowQuizName" type="checkbox" id="quizNameCheckbox" name="quizNameCheckbox">
+<label for="quizNameCheckbox">quizzes name</label>
+<input @bind="@ShowQuizDesc" type="checkbox" id="quizDescCheckbox" name="quizDescCheckbox">
+<label for="quizDescCheckbox">quizzes description</label>
+<input @bind="@ShowQuestion" type="checkbox" id="questionCheckbox" name="questionCheckbox">
+<label for="questionCheckbox">questions</label>
+<input @bind="@ShowAnswer" type="checkbox" id="answerCheckbox" name="answerCheckbox">
+<label for="answerCheckbox">answers</label>
+
+
+@if (ShowUser)
+{
+	<hr />
+	<h3>users:</h3>
+
+	@foreach (var model in _users)
+	{
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-sm">
+						<b>@model.Name</b>
+					</div>
+					<div class="col-sm" style="text-align:right">
+						<a class="btn btn-primary"
+						   href="/UserEdit/@model.Id/@LoggedUserId">Detail</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@if (ShowQuizName)
+{
+	<hr />
+	<h3>quizzes names:</h3>
+
+	@foreach (var model in _quizzesName)
+	{
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-sm">
+						<b>@model.Name</b>
+					</div>
+					<div class="col-sm" style="text-align:right">
+						<a class="btn btn-primary"
+						   href="/quizEdit/@model.Id/@LoggedUserId">Detail</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@if (ShowQuizDesc)
+{
+	<hr />
+	<h3>quizzes descriptions:</h3>
+
+	@foreach (var model in _quizzesName)
+	{
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-sm">
+						<b>@model.Name</b>
+						<p>@model.Description</p>
+					</div>
+					<div class="col-sm" style="text-align:right">
+						<a class="btn btn-primary"
+								href="/quizEdit/@model.Id/@LoggedUserId">
+							Detail
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@if (ShowQuestion)
+{
+	<hr />
+	<h3>questions:</h3>
+	@foreach (var model in _questions)
+	{
+		<QuestionListCard model="model" LoggedUserId="LoggedUserId"></QuestionListCard>
+	}
+}
+
+@if (ShowAnswer)
+{
+	<hr />
+	<h3>answers:</h3>
+
+	@foreach (var model in _answers)
+	{
+		<AnswerListCard model="model" LoggedUserId="LoggedUserId"></AnswerListCard>
+	}
+}

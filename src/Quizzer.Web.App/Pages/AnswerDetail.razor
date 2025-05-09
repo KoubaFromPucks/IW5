@@ -1,0 +1,24 @@
+﻿@page "/answerDetail/{QuestionId:guid}/{AnswerId:guid}/{LoggedUserId:guid}"
+
+@inherits PageBase
+@using Quizzer.Web.App.Components;
+@inject NavigationManager NavManager
+@inject IJSRuntime JsRuntime
+
+<Toolbar LoggedUser="LoggedUser"></Toolbar>
+
+<HeaderWithTitle titleStr=@(AnswerId != Guid.Empty ? "Edit answer" : "Create answer")></HeaderWithTitle>
+
+<MessageBox messageboxClass="@_messageboxClass"
+			messageBoxText="@_messageBoxText"
+			messageBoxVisible="@_messageBoxVisible"></MessageBox>
+
+@if (Answer is not null)
+{
+    <AnswerEditForm AnswerDetailModel="Answer" OnDone="Done" OnSave="Submit"
+        OnInvalid="HideMessageBox"/>
+}
+else
+{
+    <p>Loading...</p>
+}

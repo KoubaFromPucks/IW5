@@ -1,0 +1,24 @@
+﻿@inherits ComponentBase;
+@using Quizzer.Common.Models
+
+<nav class="navbar navbar-expand-lg  bg-dark navbar-dark">
+	<span class="navbar-brand" style="margin-left: 42px; margin-right: 42px;">Quizzer</span>
+
+	<div class="navbar-nav">
+		<a class="nav-item nav-link active" href="/users/@LoggedUser?.Id">Users</a>
+		<a class="nav-item nav-link active" href="/QuizListPage/@LoggedUser?.Id">Quizzes</a>
+		<a class="nav-item nav-link active" href="/questions/@LoggedUser?.Id">Questions</a>
+		<a class="nav-item nav-link active" href="/answers/@LoggedUser?.Id">Answers</a>
+		<a class="nav-item nav-link active" href="/search/@LoggedUser?.Id">Search</a>
+
+	</div>
+
+	<span class="navbar-text" style="margin-left: 42px;">
+		Current user: <b>@LoggedUser?.Name</b>
+	</span>
+
+	<a class="nav-item nav-link active btn btn-secondary" href="/"
+	style="margin-left: 21px;">Switch user</a>
+</nav>
+
+

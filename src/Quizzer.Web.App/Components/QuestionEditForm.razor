@@ -1,0 +1,50 @@
+﻿@using Common.Models;
+@using Quizzer.API.DAL.Enums;
+
+<EditForm Model="@Question" OnValidSubmit="@OnSave" OnInvalidSubmit="@OnInvalid">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="container editCard-w card mb-3 pt-3">
+        <div class="row row-cols-1 mb-3">
+            <div class="form-group col">
+                <label class="w-100">
+                    Question Text:
+                    <InputText @bind-Value="@Question.Text" class="form-control" disabled=@(!Question.IsQuizEditable) />
+                    <small class="form-text text-danger">
+                        <ValidationMessage For="@(() => Question.Text)" />
+                    </small>
+                </label>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 mb-3">
+            <div class="form-group col">
+                <label class="w-100">
+                    Question Type:
+                    <InputSelect @bind-Value="@Question.QuestionType" class="form-control" disabled=@(!Question.IsQuizEditable)>
+                        @foreach (var questionType in Enum.GetValues<AnswerFormat>())
+                        {
+                            <option value="@questionType">@questionType.ToString()</option>
+                        }
+                    </InputSelect>
+                    <small class="form-text text-danger">
+                        <ValidationMessage For="@(() => Question.QuestionType)" />
+                    </small>
+                </label>
+            </div>
+        </div>
+
+        <div class="row row-cols-4 card-footer">
+            <div class="col text-center">
+                <button type="submit" class="btn btn-success @GetDisableClass()">
+                    Save
+                </button>
+            </div>
+
+            <div class="col text-center">
+                <button class="btn btn-secondary mr-2" @onclick="@OnDone">Done</button>
+            </div>
+        </div>
+    </div>
+</EditForm>

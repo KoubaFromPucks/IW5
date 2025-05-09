@@ -1,0 +1,73 @@
+﻿@using Quizzer.API.DAL.Enums;
+
+<EditForm Model="@AnswerDetailModel" OnValidSubmit="@OnSave" OnInvalidSubmit="@OnInvalid">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="container card mb-3 pt-3 editCard-w">
+        <div class="row no-gutters">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="w-100">
+                            Answer Text:
+                            <InputText @bind-Value="@AnswerDetailModel.Text" class="form-control" 
+                                       disabled=@(!AnswerDetailModel.IsQuizEditable)/>
+                            <small class="form-text text-danger">
+                                <ValidationMessage For="@(() => AnswerDetailModel.Text)" />
+                            </small>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="w-100">
+                            Is correct:
+                            <InputCheckbox @bind-Value="@AnswerDetailModel.IsCorrect" 
+                                           class="form-check-input"
+                                           disabled="@(AnswerDetailModel.Type == AnswerFormat.OrderChoice || !AnswerDetailModel.IsQuizEditable)" />
+                            <small class="form-text text-danger">
+                                <ValidationMessage For="@(() => AnswerDetailModel.IsCorrect)" />
+                            </small>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="w-100">
+                            Order:
+                            <InputNumber min="0" @bind-Value="@AnswerDetailModel.Order" 
+                                         class="form-control"
+                                         disabled="@(AnswerDetailModel.Type != AnswerFormat.OrderChoice || !AnswerDetailModel.IsQuizEditable)" />
+                            <small class="form-text text-danger">
+                                <ValidationMessage For="@(() => AnswerDetailModel.Order)" />
+                            </small>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="w-100">
+                            Picture Url
+                            <InputText @bind-Value="@AnswerDetailModel.PictureUrl" class="form-control" 
+                                       disabled=@(!AnswerDetailModel.IsQuizEditable) />
+                            <small class="form-text text-danger">
+                                <ValidationMessage For="@(() => AnswerDetailModel.PictureUrl)" />
+                            </small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <img src="@AnswerDetailModel.PictureUrl" class="card-img">
+            </div>
+        </div>
+
+        <div class="card-footer text-muted row row-3">
+            <div class="col text-center">
+                <button type="submit" class="btn btn-success @GetDisableClass()">Save</button>
+            </div>
+
+            <div class="col text-center">
+                <button type="button" class="btn btn-secondary" @onclick="@OnDone">Done</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
